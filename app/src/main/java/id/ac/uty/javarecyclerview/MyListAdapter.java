@@ -1,11 +1,12 @@
 package id.ac.uty.javarecyclerview;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextClock;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -28,12 +29,29 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyListAdapter.ViewHolder holder, int position) {
         final DataList dataList = listData[position];
-        holder.imageView.setImageResource(listData[position].getImageId());
-        holder.textTitle.setText(listData[position].getTitle());
-        holder.textPrice.setText(listData[position].getPrice());
+        final int image = dataList.getImageId();
+        final String title = dataList.getTitle();
+        final String price = dataList.getPrice();
 
+        holder.imageView.setImageResource(image);
+        holder.textTitle.setText(title);
+        holder.textPrice.setText(price);
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), image + "\n" + title +"\n" + price, Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(view.getContext(), DetailActivity.class);
+                intent.putExtra("image", image);
+                intent.putExtra("title", title);
+                intent.putExtra("price", price);
+                view.getContext().startActivity(intent);
+
+            }
+        });
     }
 
     @Override
@@ -47,10 +65,10 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         public CardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.cardView = (CardView) itemView.findViewById(R.id.cardView);
-            this.imageView = (ImageView) itemView.findViewById(R.id.list_img);
-            this.textTitle = (TextView) itemView.findViewById(R.id.list_title);
-            this.textPrice = (TextView) itemView.findViewById(R.id.list_price);
+            this.cardView = itemView.findViewById(R.id.cardView);
+            this.imageView = itemView.findViewById(R.id.list_img);
+            this.textTitle = itemView.findViewById(R.id.list_title);
+            this.textPrice = itemView.findViewById(R.id.list_price);
         }
     }
 }
